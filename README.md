@@ -1,2 +1,2 @@
 # machine-learning
-the progress of machine learning
+my progress of machine learning
