@@ -209,6 +209,15 @@ class StockScraper:
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
         
+        # Whitelist of allowed column names to prevent SQL injection
+        allowed_columns = {
+            'price_change_percent', 'latest_price', 'volume', 'turnover',
+            'market_cap', 'price_change', 'stock_code', 'stock_name'
+        }
+        
+        if order_by not in allowed_columns:
+            order_by = 'price_change_percent'
+        
         order = 'ASC' if ascending else 'DESC'
         
         cursor.execute(f'''

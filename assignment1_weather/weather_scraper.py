@@ -113,7 +113,8 @@ class WeatherScraper:
                         # 风向和风力
                         wind_elem = day.find('p', class_='win')
                         if wind_elem:
-                            wind_direction = wind_elem.find('em').find('span')['title'] if wind_elem.find('em') and wind_elem.find('em').find('span') else ''
+                            wind_em = wind_elem.find('em')
+                            wind_direction = wind_em.find('span')['title'] if wind_em and wind_em.find('span') else ''
                             wind_level = wind_elem.find('i').text.strip() if wind_elem.find('i') else ''
                         else:
                             wind_direction = ''

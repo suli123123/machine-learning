@@ -153,36 +153,24 @@ class UniversityRankingScraper:
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
         
+        # Build query dynamically
+        query = '''
+            SELECT rank_number, university_name, province, university_type, total_score
+            FROM university_ranking
+        '''
+        params = []
+        
         if province:
-            if limit:
-                cursor.execute('''
-                    SELECT rank_number, university_name, province, university_type, total_score
-                    FROM university_ranking
-                    WHERE province = ?
-                    ORDER BY CAST(rank_number AS INTEGER)
-                    LIMIT ?
-                ''', (province, limit))
-            else:
-                cursor.execute('''
-                    SELECT rank_number, university_name, province, university_type, total_score
-                    FROM university_ranking
-                    WHERE province = ?
-                    ORDER BY CAST(rank_number AS INTEGER)
-                ''', (province,))
-        else:
-            if limit:
-                cursor.execute('''
-                    SELECT rank_number, university_name, province, university_type, total_score
-                    FROM university_ranking
-                    ORDER BY CAST(rank_number AS INTEGER)
-                    LIMIT ?
-                ''', (limit,))
-            else:
-                cursor.execute('''
-                    SELECT rank_number, university_name, province, university_type, total_score
-                    FROM university_ranking
-                    ORDER BY CAST(rank_number AS INTEGER)
-                ''')
+            query += ' WHERE province = ?'
+            params.append(province)
+        
+        query += ' ORDER BY CAST(rank_number AS INTEGER)'
+        
+        if limit:
+            query += ' LIMIT ?'
+            params.append(limit)
+        
+        cursor.execute(query, params)
         
         results = cursor.fetchall()
         conn.close()
